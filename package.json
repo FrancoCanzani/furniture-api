@@ -7,7 +7,8 @@
     "dev": "ts-node-dev --respawn --transpile-only src/app.ts",
     "dev:simple": "ts-node src/app.ts",
     "build": "tsc",
-    "start": "node dist/app.js"
+    "start": "node dist/app.js",
+    "generate": "node --loader ts-node/esm src/lib/helpers/ai-generation.ts"
   },
   "keywords": [],
   "author": "",
@@ -22,10 +23,12 @@
     "typescript": "^5.6.3"
   },
   "dependencies": {
+    "@ai-sdk/openai": "^0.0.72",
     "@supabase/supabase-js": "^2.46.1",
     "ai": "^3.4.33",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
-    "express": "^4.21.1"
+    "express": "^4.21.1",
+    "uuid": "^11.0.2"
   }
 }
