@@ -62,3 +62,12 @@ export const productQuerySchema = z.object({
 });
 
 export const productUUIDSchema = z.string().uuid({ message: 'Invalid UUID' });
+
+export const updateProductStockSchema = z.object({
+  updates: z.array(
+    z.object({
+      productSku: z.string().min(1, 'Product SKU is required'),
+      quantity: z.number().int('Quantity must be a whole number'),
+    })
+  ),
+});

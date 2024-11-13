@@ -2,7 +2,7 @@ import express, { Express, Request, Response } from 'express';
 import cors from 'cors';
 import { config } from 'dotenv';
 import pinoHttp from 'pino-http';
-import router from './routes/products/products-routes';
+import productsRoutes from './routes/products/products-routes';
 
 config();
 
@@ -22,7 +22,7 @@ app.get('/', (req: Request, res: Response) => {
   req.log.info('Home route accessed');
   res.json({ message: 'Welcome to Furniture API' });
 });
-app.use('/v1', router);
+app.use('/v1', productsRoutes);
 
 const PORT = process.env.PORT || 3000;
 
