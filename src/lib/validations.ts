@@ -60,3 +60,5 @@ export const productQuerySchema = z.object({
 
   status: z.enum(['active', 'inactive']).optional(),
 });
+
+export const productUUIDSchema = z.string().uuid({ message: 'Invalid UUID' });
