@@ -2,7 +2,7 @@ import express, { Express, Request, Response } from 'express';
 import cors from 'cors';
 import { config } from 'dotenv';
 import pinoHttp from 'pino-http';
-import router from './routes/products/index.js';
+import router from './routes/products/products-routes';
 
 config();
 
