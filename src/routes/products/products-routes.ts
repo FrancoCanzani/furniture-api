@@ -1,12 +1,14 @@
 import express from 'express';
 import { productsController } from '../../controllers/products-controller';
 import { productController } from '../../controllers/product-controller';
-import inventoryRoutes from './inventory/products-inventory-routes';
+import { productStockController } from '../../controllers/product-stock-controller';
+import { productFeaturedController } from '../../controllers/product-featured-controller';
 
 const router = express.Router();
 
 router.get('/products', productsController);
 router.get('/products/:sku', productController);
-router.use('/products', inventoryRoutes);
+router.patch('/products/stock', productStockController);
+router.patch('/products/:sku/featured', productFeaturedController);
 
 export default router;
