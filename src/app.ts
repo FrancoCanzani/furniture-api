@@ -4,6 +4,7 @@ import { config } from 'dotenv';
 import pinoHttp from 'pino-http';
 import productsRoutes from './routes/products/products-routes';
 import { resetStockJob } from './lib/jobs';
+import { dailyLimiter } from './lib/rate-limit';
 
 // env
 config();
@@ -20,6 +21,7 @@ app.use(httpLogger);
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(dailyLimiter);
 
 // routes
 app.get('/', (req: Request, res: Response) => {
