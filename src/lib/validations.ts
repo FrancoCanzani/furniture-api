@@ -71,3 +71,26 @@ export const updateProductStockSchema = z.object({
     })
   ),
 });
+
+export const discountQuerySchema = z
+  .object({
+    discountPercentage: z
+      .string()
+      .optional()
+      .refine(
+        (val) =>
+          !val || (!isNaN(Number(val)) && Number(val) > 0 && Number(val) < 100),
+        {
+          message: 'Discount percentage must be a number between 0 and 100',
+        }
+      ),
+    discountPrice: z
+      .string()
+      .optional()
+      .refine((val) => !val || (!isNaN(Number(val)) && Number(val) > 0), {
+        message: 'Discount price must be a positive number',
+      }),
+  })
+  .refine((data) => data.discountPercentage || data.discountPrice, {
+    message: 'Either discountPrice or discountPercentage must be provided',
+  });
