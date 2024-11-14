@@ -3,12 +3,16 @@ import cors from 'cors';
 import { config } from 'dotenv';
 import pinoHttp from 'pino-http';
 import productsRoutes from './routes/products/products-routes';
+import { resetStockJob } from './lib/jobs';
 
+// env
 config();
+
+// cron jobs
+resetStockJob();
 
 const app: Express = express();
 
-// Create HTTP logger middleware
 const httpLogger = pinoHttp();
 
 // middleware
