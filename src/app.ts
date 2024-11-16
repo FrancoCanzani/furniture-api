@@ -5,6 +5,8 @@ import pinoHttp from 'pino-http';
 import productsRoutes from './routes/products/products-routes';
 import { resetStockJob } from './lib/jobs';
 import { dailyLimiter } from './lib/rate-limit';
+import helmet from 'helmet';
+import morgan from 'morgan';
 
 // env
 config();
@@ -14,7 +16,7 @@ resetStockJob();
 
 const app: Express = express();
 
-const httpLogger = pinoHttp();
+const httpLogger = morgan('tiny');
 
 // middleware
 app.use(httpLogger);
@@ -22,6 +24,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(dailyLimiter);
+app.use(helmet());
 
 // routes
 app.get('/', (req: Request, res: Response) => {
