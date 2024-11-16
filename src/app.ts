@@ -1,4 +1,4 @@
-import express, { Express, Request, Response } from 'express';
+import express, { Express, Response } from 'express';
 import cors from 'cors';
 import { config } from 'dotenv';
 import productsRoutes from './routes/products/products-routes.js';
@@ -15,10 +15,8 @@ resetStockJob();
 
 const app: Express = express();
 
-const httpLogger = morgan('tiny');
-
 // middleware
-app.use(httpLogger);
+app.use(morgan('dev'));
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -26,8 +24,7 @@ app.use(dailyLimiter);
 app.use(helmet());
 
 // routes
-app.get('/', (req: Request, res: Response) => {
-  req.log.info('Home route accessed');
+app.get('/', (res: Response) => {
   res.json({ message: 'Welcome to Furniture API' });
 });
 app.use('/v1', productsRoutes);
