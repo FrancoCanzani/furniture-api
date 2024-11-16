@@ -1,4 +1,4 @@
-import express, { Express, Response } from 'express';
+import express, { Express, Request, Response } from 'express';
 import cors from 'cors';
 import { config } from 'dotenv';
 import productsRoutes from './routes/products/products-routes.js';
@@ -24,7 +24,7 @@ app.use(dailyLimiter);
 app.use(helmet());
 
 // routes
-app.get('/', (res: Response) => {
+app.get('/', (_req: Request, res: Response) => {
   res.json({ message: 'Welcome to Furniture API' });
 });
 app.use('/v1', productsRoutes);
