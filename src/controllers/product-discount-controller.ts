@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import supabase from '../lib/supabase';
 import { productUUIDSchema } from '../lib/validations';
 import { discountQuerySchema } from '../lib/validations';
+import { handleSupabaseError } from '../lib/helpers/handle-supabase-error';
 
 export const productDiscountController = async (
   req: Request,
@@ -34,7 +35,10 @@ export const productDiscountController = async (
       .eq('sku', skuResult.data)
       .single();
 
-    if (fetchError) throw fetchError;
+    if (fetchError) {
+      handleSupabaseError(fetchError);
+    }
+
     if (!product) {
       return res.status(404).json({ error: 'Product not found' });
     }

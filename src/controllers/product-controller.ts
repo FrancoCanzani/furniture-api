@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
-import getProduct from '../services/product-service';
 import { productUUIDSchema } from '../lib/validations';
+import supabase from '../lib/supabase';
+import { handleSupabaseError } from '../lib/helpers/handle-supabase-error';
 
 export const productController = async (req: Request, res: Response) => {
   try {
@@ -11,23 +12,39 @@ export const productController = async (req: Request, res: Response) => {
 
     if (!result.success) {
       return res.status(400).json({
+        success: false,
         error: 'Invalid query parameters',
         details: result.error.issues,
       });
     }
 
-    const product = await getProduct(sku);
+    const { data: product, error } = await supabase
+      .from('products')
+      .select('*')
+      .eq('sku', sku)
+      .single();
 
-    if (!product) {
-      return res.status(404).json({ error: 'Product not found' });
+    if (error) {
+      handleSupabaseError(error);
     }
 
-    return res.json({
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        error: 'Product not found',
+      });
+    }
+
+    return res.status(200).json({
       success: true,
       data: product,
     });
   } catch (error) {
-    console.error('Error handling request:', error);
-    return res.status(500).json({ error: 'Failed to get product' });
+    console.error('Unexpected error:', error);
+
+    return res.status(500).json({
+      success: false,
+      error: 'An unexpected error occurred',
+    });
   }
 };

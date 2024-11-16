@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import supabase from '../lib/supabase';
 import { productUUIDSchema } from '../lib/validations';
+import { handleSupabaseError } from '../lib/helpers/handle-supabase-error';
 
 export const productFeaturedController = async (
   req: Request,
@@ -25,7 +26,13 @@ export const productFeaturedController = async (
       .eq('sku', sku)
       .single();
 
-    if (fetchError) throw fetchError;
+    if (fetchError) {
+      handleSupabaseError(fetchError);
+    }
+
+    if (!product) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
 
     const { data, error } = await supabase
       .from('products')
@@ -34,15 +41,15 @@ export const productFeaturedController = async (
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+      handleSupabaseError(error);
+    }
 
     return res.json({
       success: true,
       data,
     });
   } catch (error) {
-    console.log(error);
-
     return res.status(500).json({
       error: 'Failed to process request',
       details: error instanceof Error ? error.message : 'Unknown error',

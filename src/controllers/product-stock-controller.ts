@@ -67,7 +67,6 @@ export const productStockController = async (req: Request, res: Response) => {
       })
     );
 
-    // Check if any updates failed
     const hasErrors = results.some((result) => !result.success);
 
     if (hasErrors) {

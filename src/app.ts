@@ -1,7 +1,6 @@
 import express, { Express, Request, Response } from 'express';
 import cors from 'cors';
 import { config } from 'dotenv';
-import pinoHttp from 'pino-http';
 import productsRoutes from './routes/products/products-routes';
 import { resetStockJob } from './lib/jobs';
 import { dailyLimiter } from './lib/rate-limit';
