@@ -1,5 +1,5 @@
 import { CronJob } from 'cron';
-import supabase from './supabase';
+import supabase from './supabase.js';
 
 // Daily: 0 0 * * * (runs at midnight)
 // Every 12 hours: 0 */12 * * * (runs at 12am and 12pm)

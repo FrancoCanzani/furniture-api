@@ -1,6 +1,6 @@
-import { updateProductStockSchema } from '../lib/validations';
+import { updateProductStockSchema } from '../lib/validations.js';
 import { Request, Response } from 'express';
-import supabase from '../lib/supabase';
+import supabase from '../lib/supabase.js';
 
 export const productStockController = async (req: Request, res: Response) => {
   try {

@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import supabase from '../lib/supabase';
-import { productUUIDSchema } from '../lib/validations';
-import { handleSupabaseError } from '../lib/helpers/handle-supabase-error';
+import supabase from '../lib/supabase.js';
+import { productUUIDSchema } from '../lib/validations.js';
+import { handleSupabaseError } from '../lib/helpers/handle-supabase-error.js';
 
 export const productFeaturedController = async (
   req: Request,

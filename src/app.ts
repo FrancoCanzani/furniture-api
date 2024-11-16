@@ -1,9 +1,9 @@
 import express, { Express, Request, Response } from 'express';
 import cors from 'cors';
 import { config } from 'dotenv';
-import productsRoutes from './routes/products/products-routes';
-import { resetStockJob } from './lib/jobs';
-import { dailyLimiter } from './lib/rate-limit';
+import productsRoutes from './routes/products/products-routes.js';
+import { resetStockJob } from './lib/jobs.js';
+import { dailyLimiter } from './lib/rate-limit.js';
 import helmet from 'helmet';
 import morgan from 'morgan';
 

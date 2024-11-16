@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import { productUUIDSchema } from '../lib/validations';
-import supabase from '../lib/supabase';
-import { handleSupabaseError } from '../lib/helpers/handle-supabase-error';
+import { productUUIDSchema } from '../lib/validations.js';
+import supabase from '../lib/supabase.js';
+import { handleSupabaseError } from '../lib/helpers/handle-supabase-error.js';
 
 export const productController = async (req: Request, res: Response) => {
   try {
