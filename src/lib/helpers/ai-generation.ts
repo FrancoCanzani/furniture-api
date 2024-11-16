@@ -100,7 +100,7 @@ async function generateFurniture() {
 
   const random = getRandomInt(1, 25);
 
-  const { data, error } = await supabase.from('products').insert({
+  await supabase.from('products').insert({
     name: product.name,
     category: product.category,
     description: product.description,
