@@ -8,6 +8,25 @@ export const productQuerySchema = z.object({
     .transform((val) => (val ? parseInt(val) : 10))
     .pipe(z.number().min(1).max(100)),
 
+  offset: z
+    .string()
+    .optional()
+    .transform((val) => (val ? parseInt(val) : 0))
+    .pipe(z.number().min(0)),
+
+  // Sorting
+  sort: z
+    .enum([
+      'price_asc',
+      'price_desc',
+      'name_asc',
+      'name_desc',
+      'newest',
+      'oldest',
+    ])
+    .optional()
+    .default('newest'),
+
   // Search
   name: z.string().optional(),
 
@@ -47,17 +66,14 @@ export const productQuerySchema = z.object({
 
   // Price range
   min_price: z.coerce.number().nonnegative().optional(),
-
   max_price: z.coerce.number().nonnegative().optional(),
 
   // Stock range
   min_stock: z.coerce.number().nonnegative().optional(),
-
   max_stock: z.coerce.number().nonnegative().optional(),
 
   // Boolean filters
   featured: z.coerce.boolean().optional(),
-
   status: z.enum(['active', 'inactive']).optional(),
 });
 

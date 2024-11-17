@@ -4,7 +4,6 @@ import supabase from '../lib/supabase.js';
 
 export const productsController = async (req: Request, res: Response) => {
   try {
-    // Validate query parameters
     const result = productQuerySchema.safeParse(req.query);
 
     if (!result.success) {
@@ -15,7 +14,9 @@ export const productsController = async (req: Request, res: Response) => {
     }
 
     const {
-      limit,
+      limit = 10,
+      offset = 0,
+      sort = 'newest',
       name,
       category,
       wood_type,
@@ -28,54 +29,56 @@ export const productsController = async (req: Request, res: Response) => {
       featured,
     } = result.data;
 
-    let query = supabase.from('products').select('*');
+    let query = supabase.from('products').select('*', { count: 'exact' });
 
-    // Apply filters
-    if (limit) {
-      query = query.limit(limit);
-    }
-
+    //  filters
     if (name) {
-      query = query.ilike('name', `%${name}%`);
+      const searchTerm = name.trim().toLowerCase();
+      const singularTerm = searchTerm.endsWith('s')
+        ? searchTerm.slice(0, -1)
+        : searchTerm;
+
+      query = query.or(
+        `name.ilike.%${searchTerm}%,category.ilike.%${singularTerm}%`
+      );
     }
 
-    if (category) {
-      query = query.eq('category', category);
+    if (category) query = query.eq('category', category);
+    if (wood_type) query = query.eq('wood_type', wood_type);
+    if (finish) query = query.eq('finish', finish);
+    if (min_price) query = query.gte('price', min_price);
+    if (max_price) query = query.lte('price', max_price);
+    if (min_stock) query = query.gte('stock', min_stock);
+    if (max_stock) query = query.lte('stock', max_stock);
+    if (status) query = query.eq('status', status);
+    if (featured !== undefined) query = query.eq('featured', featured);
+
+    //  sorting
+    switch (sort) {
+      case 'price_asc':
+        query = query.order('price', { ascending: true });
+        break;
+      case 'price_desc':
+        query = query.order('price', { ascending: false });
+        break;
+      case 'name_asc':
+        query = query.order('name', { ascending: true });
+        break;
+      case 'name_desc':
+        query = query.order('name', { ascending: false });
+        break;
+      case 'oldest':
+        query = query.order('created_at', { ascending: true });
+        break;
+      case 'newest':
+      default:
+        query = query.order('created_at', { ascending: false });
     }
 
-    if (wood_type) {
-      query = query.eq('wood_type', wood_type);
-    }
+    //  pagination
+    query = query.range(offset, offset + limit - 1);
 
-    if (finish) {
-      query = query.eq('finish', finish);
-    }
-
-    if (min_price) {
-      query = query.gte('price', min_price);
-    }
-
-    if (max_price) {
-      query = query.lte('price', max_price);
-    }
-
-    if (min_stock) {
-      query = query.gte('stock', min_stock);
-    }
-
-    if (max_stock) {
-      query = query.lte('stock', max_stock);
-    }
-
-    if (status) {
-      query = query.eq('status', status);
-    }
-
-    if (featured !== undefined) {
-      query = query.eq('featured', featured);
-    }
-
-    const { data, error } = await query;
+    const { data, error, count } = await query;
 
     if (error) {
       console.error('Database query error:', error);
@@ -85,16 +88,10 @@ export const productsController = async (req: Request, res: Response) => {
       });
     }
 
-    if (!data || data.length === 0) {
-      return res.status(404).json({
-        error: 'No products found matching the criteria',
-      });
-    }
-
     return res.json({
       success: true,
-      count: data.length,
-      data,
+      count: count ?? 0,
+      data: data ?? [],
     });
   } catch (error) {
     console.error('Error handling request:', error);
