@@ -1,77 +1,179 @@
-# Furniture API
+# 🪑 Furniture API
 
-Welcome to the Furniture API! This API is designed for managing and interacting with a furniture catalog. It supports features like filtering, sorting, stock updates, discounts, and more.
+A robust REST API for managing a furniture catalog with advanced features including AI-generated content, real-time stock management, and dynamic pricing.
 
-## Base URL
+## Table of Contents
 
-All endpoints are based at:
+- [Overview](#overview)
+- [Getting Started](#getting-started)
+  - [Base URL](#base-url)
+  - [Authentication](#authentication)
+  - [Rate Limits](#rate-limits)
+- [API Endpoints](#api-endpoints)
+  - [Product Listing](#product-listing)
+  - [Product Details](#product-details)
+  - [Stock Management](#stock-management)
+  - [Featured Products](#featured-products)
+  - [Product Discounts](#product-discounts)
+- [Data Models](#data-models)
+- [Feature Details](#feature-details)
+- [Error Handling](#error-handling)
+- [Development](#development)
+- [Deployment](#deployment)
+- [Examples](#examples)
+
+## Overview
+
+The Furniture API provides a comprehensive solution for managing an online furniture catalog. Key features include:
+
+- 🔍 Advanced filtering and search capabilities
+- 📦 Real-time stock management
+- 💰 Dynamic pricing and discounts
+- 🤖 AI-generated product data and images
+- 🔄 Automated maintenance tasks
+- 🔒 Built-in security features
+
+## Getting Started
+
+### Base URL
 
 ```
 https://furniture-api.fly.dev
 ```
 
----
+### Authentication
 
-## Endpoints
+The API currently uses Supabase's anonymous key for authentication. Include your key in the environment variables:
 
-### **GET** `/v1/products`
+```bash
+PUBLIC_ANON_KEY=your-supabase-key
+```
 
-Fetch a list of products with optional filtering, sorting, and pagination.
+### Rate Limits
+
+- 100 requests per IP address per day
+- Exceeded limits return `429 Too Many Requests`
+- Headers include `X-RateLimit-Remaining` for tracking
+
+## API Endpoints
+
+### Product Listing
+
+**GET** `/v1/products`
+
+Retrieve a paginated list of products with comprehensive filtering options.
 
 #### Query Parameters
 
-- **`limit`** _(optional, default: 10)_: Number of items per page. Min: 1, Max: 100.
-- **`offset`** _(optional, default: 0)_: Offset for pagination.
-- **`sort`** _(optional, default: `newest`)_:
-  - Options: `price_asc`, `price_desc`, `name_asc`, `name_desc`, `newest`, `oldest`.
-- **Filters**:
-  - `name`: Partial match search on product name or category.
-  - `category`: Product category (e.g., `sofa`, `chair`, `lamp`).
-  - `wood_type`: Type of wood (e.g., `oak`, `maple`).
-  - `finish`: Finish type (`natural`, `light`, `medium`, `dark`).
-  - `min_price`, `max_price`: Price range filters.
-  - `min_stock`, `max_stock`: Stock range filters.
-  - `featured`: Boolean (`true` or `false`) to filter featured products.
-  - `status`: Product status (`active` or `inactive`).
+| Parameter | Type    | Default  | Description                |
+| --------- | ------- | -------- | -------------------------- |
+| limit     | number  | 10       | Items per page (1-100)     |
+| offset    | number  | 0        | Pagination offset          |
+| sort      | string  | 'newest' | Sorting method             |
+| name      | string  | -        | Search in names/categories |
+| category  | string  | -        | Product category filter    |
+| wood_type | string  | -        | Wood type filter           |
+| finish    | string  | -        | Finish type filter         |
+| min_price | number  | -        | Minimum price filter       |
+| max_price | number  | -        | Maximum price filter       |
+| min_stock | number  | -        | Minimum stock filter       |
+| max_stock | number  | -        | Maximum stock filter       |
+| featured  | boolean | -        | Featured products filter   |
+| status    | string  | -        | Product status filter      |
 
-#### Response
+#### Valid Values
+
+```typescript
+sort: ['price_asc', 'price_desc', 'name_asc', 'name_desc', 'newest', 'oldest'];
+category: [
+  'sofa',
+  'chair',
+  'stool',
+  'table',
+  'desk',
+  'kitchen',
+  'vanitory',
+  'matress',
+  'mirror',
+  'wardrove',
+  'lamp',
+  'tv table',
+  'garden',
+];
+wood_type: [
+  'walnut',
+  'maple',
+  'oak',
+  'pine',
+  'eucalyptus',
+  'bamboo',
+  'teak',
+  'cedar',
+];
+finish: ['dark', 'medium', 'light', 'natural'];
+status: ['active', 'inactive'];
+```
+
+#### Response Example
 
 ```json
 {
   "success": true,
   "count": 100,
   "data": [
-    /* array of products */
+    {
+      "id": "uuid",
+      "name": "Modern Oak Chair",
+      "category": "chair",
+      "description": "Comfortable modern chair...",
+      "wood_type": "oak",
+      "finish": "natural",
+      "dimensions": {
+        "width": 60,
+        "height": 90,
+        "depth": 55
+      },
+      "price": 299.99,
+      "discount_price": 249.99,
+      "weight": 12,
+      "image_path": "https://...",
+      "stock": 50,
+      "sku": "uuid",
+      "status": "active",
+      "featured": true,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-01-01T00:00:00Z"
+    }
   ]
 }
 ```
 
----
+### Product Details
 
-### **GET** `/v1/products/:sku`
+**GET** `/v1/products/:sku`
 
-Retrieve details of a single product by SKU.
+Retrieve detailed information about a specific product.
 
-#### Path Parameter
+#### Path Parameters
 
-- `sku`: Product SKU (UUID format).
+- `sku`: Product SKU (UUID format)
 
-#### Response
+#### Response Example
 
 ```json
 {
   "success": true,
   "data": {
-    /* product details */
+    // Same structure as individual product in listing
   }
 }
 ```
 
----
+### Stock Management
 
-### **PATCH** `/v1/products/stock`
+**PATCH** `/v1/products/stock`
 
-Update the stock levels of multiple products.
+Update stock levels for multiple products in a single request.
 
 #### Request Body
 
@@ -79,159 +181,261 @@ Update the stock levels of multiple products.
 {
   "updates": [
     {
-      "productSku": "string",
-      "quantity": "integer"
+      "productSku": "uuid",
+      "quantity": 5 // Positive for addition, negative for subtraction
     }
   ]
 }
 ```
 
-#### Response
+#### Response Example
 
 ```json
 {
   "message": "Stock updated successfully",
   "results": [
-    /* update results */
+    {
+      "sku": "uuid",
+      "success": true,
+      "newStock": 55
+    }
   ]
 }
 ```
 
----
+### Featured Products
 
-### **PATCH** `/v1/products/:sku/featured`
+**PATCH** `/v1/products/:sku/featured`
 
-Toggle the "featured" status of a product.
+Toggle a product's featured status.
 
-#### Path Parameter
+#### Path Parameters
 
-- `sku`: Product SKU.
+- `sku`: Product SKU (UUID format)
 
-#### Response
+#### Response Example
 
 ```json
 {
   "success": true,
   "data": {
-    /* updated product details */
+    // Updated product details
   }
 }
 ```
 
----
+### Product Discounts
 
-### **PATCH** `/v1/products/:sku/discount`
+**PATCH** `/v1/products/:sku/discount`
 
-Apply a discount to a product by percentage or price.
+Apply a discount to a product.
 
 #### Query Parameters
 
-- `discountPercentage`: Discount as a percentage (0-100).
-- `discountPrice`: Final discounted price (must be less than the original price).
+- `discountPercentage`: Percentage discount (1-99)
+- `discountPrice`: Direct discounted price
 
-#### Response
+**Note**: Provide either `discountPercentage` or `discountPrice`, not both.
+
+#### Response Example
 
 ```json
 {
   "success": true,
   "data": {
-    /* updated product details */
+    // Updated product details with new pricing
   }
 }
 ```
 
----
+## Data Models
 
-## Key Features
+### Product Schema
 
-### Filtering and Sorting
+```typescript
+interface Product {
+  id: string;
+  name: string;
+  category: string;
+  description: string;
+  wood_type: string;
+  finish: string;
+  dimensions: {
+    depth: number;
+    width: number;
+    height: number;
+  };
+  price: number;
+  weight: number;
+  image_path: string;
+  stock: number;
+  sku: string;
+  status: 'active' | 'inactive';
+  created_at: string;
+  updated_at: string;
+  featured: boolean;
+  discount_price?: number;
+  tags?: string[] | null;
+}
+```
 
-- Comprehensive filters for price, stock, category, and more.
-- Sorting options for price, name, and creation date.
+## Feature Details
 
-### Stock Management
+### AI Integration
 
-- Bulk stock updates with validation to prevent negative stock levels.
+- Product descriptions generated using GPT-4
+- Product images created with Stable Diffusion XL
+- Image optimization using Sharp
+  - Compression: 80% quality
+  - Size: Max 1200x1200px
+  - Format: JPEG with mozjpeg optimization
 
-### AI-Generated Data
+### Automated Tasks
 
-- Product data is generated using OpenAI GPT-based models.
-- Images are created with Stable Diffusion and optimized with `sharp`.
+- Daily stock reset at midnight (PST)
+- Configurable via cron expressions in `jobs.ts`
 
-### Rate Limiting
+### Security Features
 
-- API rate limited to 100 requests per day per IP.
+- Helmet.js for secure headers
+- CORS protection
+- Rate limiting
+- Input validation using Zod
 
-### Cron Jobs
+## Error Handling
 
-- Automated tasks such as resetting stock levels.
+### Common Error Codes
 
----
+- `400`: Invalid request parameters
+- `404`: Resource not found
+- `429`: Rate limit exceeded
+- `500`: Internal server error
 
-## Technologies and Libraries Used
+### Error Response Format
 
-- **Backend Framework**: Express.js
-- **Database**: Supabase (PostgreSQL-based backend as a service).
-- **Image Compression**: `sharp`
-- **AI Integration**:
-  - OpenAI for generating product data.
-  - Stable Diffusion for generating product images.
-- **Validation**: `zod`
-- **Security**:
-  - Helmet for securing HTTP headers.
-  - CORS enabled for cross-origin requests.
-- **Rate Limiting**: `express-rate-limit`
+```json
+{
+  "success": false,
+  "error": "Error message",
+  "details": "Detailed error information"
+}
+```
 
----
+## Development
 
-## Setup Instructions
+### Prerequisites
 
-1. Clone the repository.
+- Node.js 18+
+- npm or yarn
+- Supabase account
+- GetImg API key (for image generation)
+
+### Setup
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/your-username/furniture-api.git
+cd furniture-api
+```
+
 2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. Set environment variables:
-   - `PUBLIC_ANON_KEY` (Supabase Public Key).
-   - `GETIMG_API_KEY` (Image API Key).
-4. Run the development server:
-   ```bash
-   npm start
-   ```
-5. Access the API at:
-   ```
-   http://localhost:3000
-   ```
 
----
+```bash
+npm install
+```
 
-## Example Use Cases
+3. Create `.env` file:
 
-1. Fetch all chairs under $500:
+```bash
+PUBLIC_ANON_KEY=your-supabase-key
+GETIMG_API_KEY=your-getimg-key
+PORT=3000
+```
 
-   ```
-   GET /v1/products?category=chair&max_price=500
-   ```
+4. Start development server:
 
-2. Update stock for multiple products:
+```bash
+npm run dev
+```
 
-   ```json
-   PATCH /v1/products/stock
-   {
-     "updates": [
-       { "productSku": "sku-123", "quantity": 5 },
-       { "productSku": "sku-456", "quantity": -3 }
-     ]
-   }
-   ```
+### Testing
 
-3. Mark a product as featured:
-   ```
-   PATCH /v1/products/:sku/featured
-   ```
+```bash
+npm run test        # Run tests
+npm run test:watch  # Watch mode
+```
 
----
+## Deployment
+
+### Fly.io Deployment
+
+1. Install Fly CLI
+2. Initialize Fly app:
+
+```bash
+fly launch
+```
+
+3. Deploy:
+
+```bash
+fly deploy
+```
+
+### Environment Variables
+
+Set these in your deployment environment:
+
+```bash
+fly secrets set PUBLIC_ANON_KEY=your-key
+fly secrets set GETIMG_API_KEY=your-key
+```
+
+## Examples
+
+### Complex Filtering Example
+
+```bash
+# Get all oak chairs under $500, sorted by price
+curl "https://furniture-api.fly.dev/v1/products?category=chair&wood_type=oak&max_price=500&sort=price_asc"
+```
+
+### Bulk Stock Update
+
+```bash
+curl -X PATCH "https://furniture-api.fly.dev/v1/products/stock" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "updates": [
+      {"productSku": "uuid1", "quantity": 5},
+      {"productSku": "uuid2", "quantity": -3}
+    ]
+  }'
+```
+
+### Apply Percentage Discount
+
+```bash
+curl -X PATCH "https://furniture-api.fly.dev/v1/products/uuid/discount?discountPercentage=20"
+```
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
 ## License
 
-This project is licensed under the MIT License. See `LICENSE` for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Support
+
+For support, email api-support@furniture.com or open an issue on GitHub.
+
+---
+
+_Last updated: November 17, 2024_
