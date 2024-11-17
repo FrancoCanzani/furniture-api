@@ -1,4 +1,4 @@
-import express, { Express, Request, Response } from 'express';
+import express, { Express } from 'express';
 import cors from 'cors';
 import { config } from 'dotenv';
 import productsRoutes from './routes/products/products-routes.js';
@@ -6,6 +6,7 @@ import { resetStockJob } from './lib/jobs.js';
 import { dailyLimiter } from './lib/rate-limit.js';
 import helmet from 'helmet';
 import morgan from 'morgan';
+import { readmeController } from './controllers/readme-controller.js';
 
 // env
 config();
@@ -24,9 +25,7 @@ app.use(dailyLimiter);
 app.use(helmet());
 
 // routes
-app.get('/', (_req: Request, res: Response) => {
-  res.json({ message: 'Welcome to Furniture API' });
-});
+app.get('/', readmeController);
 app.use('/v1', productsRoutes);
 
 const PORT = process.env.PORT || 3000;
