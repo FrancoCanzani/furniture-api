@@ -43,7 +43,7 @@ https://furniture-api.fly.dev
 
 ### Rate Limits
 
-- 100 requests per IP address per day
+- 200 requests per IP address per day
 - Exceeded limits return `429 Too Many Requests`
 - Headers include `X-RateLimit-Remaining` for tracking
 
