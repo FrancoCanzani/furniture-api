@@ -41,14 +41,6 @@ The Furniture API provides a comprehensive solution for managing an online furni
 https://furniture-api.fly.dev
 ```
 
-### Authentication
-
-The API currently uses Supabase's anonymous key for authentication. Include your key in the environment variables:
-
-```bash
-PUBLIC_ANON_KEY=your-supabase-key
-```
-
 ### Rate Limits
 
 - 100 requests per IP address per day
@@ -79,7 +71,6 @@ Retrieve a paginated list of products with comprehensive filtering options.
 | min_stock | number  | -        | Minimum stock filter       |
 | max_stock | number  | -        | Maximum stock filter       |
 | featured  | boolean | -        | Featured products filter   |
-| status    | string  | -        | Product status filter      |
 
 #### Valid Values
 
@@ -111,7 +102,6 @@ wood_type: [
   'cedar',
 ];
 finish: ['dark', 'medium', 'light', 'natural'];
-status: ['active', 'inactive'];
 ```
 
 #### Response Example
@@ -434,7 +424,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Support
 
-For support, email api-support@furniture.com or open an issue on GitHub.
+For support open an issue on GitHub.
 
 ---
 
