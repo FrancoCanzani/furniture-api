@@ -33,6 +33,30 @@ The Furniture API provides a comprehensive solution for managing an online furni
 - 🔄 Automated maintenance tasks
 - 🔒 Built-in security features
 
+## API Showcase
+
+Want to see what you can build with this API? Check out our demo e-commerce site:
+
+[furniture-api-showcase.vercel.app](https://furniture-api-showcase.vercel.app)
+
+The showcase demonstrates:
+
+- 🎨 Clean, modern UI built with React + TypeScript
+- 🔍 Real-time product search and filtering
+- ♾️ Infinite scroll product listing
+- 🛒 Shopping cart functionality
+- 📱 Fully responsive design
+
+The source code for the showcase is available in our [GitHub repository](https://github.com/yourusername/furniture-api-showcase), demonstrating best practices for:
+
+- API integration
+- Rate limit handling
+- Error management
+- State management
+- Performance optimization
+
+Use this showcase as a reference for implementing your own frontend using the Furniture API.
+
 ## Getting Started
 
 ### Base URL
