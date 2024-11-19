@@ -7,7 +7,6 @@ A robust REST API for managing a furniture catalog with advanced features includ
 - [Overview](#overview)
 - [Getting Started](#getting-started)
   - [Base URL](#base-url)
-  - [Authentication](#authentication)
   - [Rate Limits](#rate-limits)
 - [API Endpoints](#api-endpoints)
   - [Product Listing](#product-listing)
