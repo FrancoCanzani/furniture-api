@@ -40,9 +40,9 @@ export const FurnitureSchema = z.object({
   weight: z.number().positive(),
 });
 
-let products = ['lamp'];
+const products = ['lamp'];
 
-let toShift = products.pop();
+const toShift = products.pop();
 products.pop();
 if (toShift) {
   products.unshift(toShift);
@@ -79,14 +79,14 @@ async function generateFurniture() {
 
   const buffer = Buffer.from(img.image, 'base64');
   const compressedBuffer = await compressImage(buffer);
-  const fileName = `public/${uuidv4()}.jpeg`;
+  const fileName = `public/${uuidv4()}.webp`;
 
   const uploadResult = await supabase.storage
     .from('products')
     .upload(fileName, compressedBuffer, {
       cacheControl: '3600',
       upsert: false,
-      contentType: 'image/jpeg',
+      contentType: 'image/webp',
     });
 
   if (uploadResult.error) {
