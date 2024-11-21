@@ -1,0 +1,18 @@
+{
+	"printWidth": 80,
+	"arrowParens": "always",
+	"explicitFunctionReturnTypes": "never",
+	"semi": true,
+	"singleQuote": true,
+	"bracketSpacing": true,
+	"bracketSameLine": false,
+	"experimentalTernaries": true,
+	"jsxSingleQuote": true,
+	"quoteProps": "as-needed",
+	"htmlWhitespaceSensitivity": "css",
+	"vueIndentScriptAndStyle": false,
+	"tabWidth": 2,
+	"trailingComma": "es5",
+	"no-wrap-attributes": true,
+	"endOfLine": "lf"
+}

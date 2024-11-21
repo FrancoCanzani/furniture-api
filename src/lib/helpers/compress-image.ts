@@ -3,10 +3,10 @@ import sharp from 'sharp';
 export async function compressImage(buffer: Buffer) {
   try {
     const compressedImageBuffer = await sharp(buffer)
-      .jpeg({
-        quality: 80, // Lower = smaller file, reduced quality
-        mozjpeg: true, // Use mozjpeg for better compression
-        chromaSubsampling: '4:4:4', // Better quality for text/sharp edges
+      .webp({
+        quality: 80,
+        lossless: true, // use lossless compression mode
+        smartSubsample: true, // use high quality chroma subsampling
       })
       .resize({
         width: 1200, // Max width
