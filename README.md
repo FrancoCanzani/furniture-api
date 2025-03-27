@@ -46,7 +46,7 @@ The showcase demonstrates:
 - 🛒 Shopping cart functionality
 - 📱 Fully responsive design
 
-The source code for the showcase is available in our [GitHub repository](https://github.com/yourusername/furniture-api-showcase), demonstrating best practices for:
+The source code for the showcase is available in our [GitHub repository](https://github.com/FrancoCanzani/furniture-api), demonstrating best practices for:
 
 - API integration
 - Rate limit handling
